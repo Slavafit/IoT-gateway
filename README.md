@@ -1,3 +1,32 @@
+# Smart Scales IoT Gateway (ESP8266)
+
+An ESP8266-based hardware gateway that reads weight data from a commercial weighing terminal via UART, parses the inverted protocol, and serves it as a JSON API over Wi-Fi for Android (Kotlin) applications.
+
+---
+
+## Features
+- **Smart Protocol Parsing**: Automatically handles inverted data packets (Little-Endian string format) from the scale terminal (e.g., transforms raw `41.1000` into `1.14` kg).
+- **Web Configurator**: Built-in HTML panel accessible at `/config` to change Wi-Fi credentials and static IP without reflashing.
+- **EEPROM Storage**: Network settings are preserved across power cycles.
+- **Captive Fallback**: If the configured Wi-Fi is unavailable, the device automatically creates an open Access Point (`SmartScales-Setup`) for troubleshooting.
+- **LED Diagnostics**: Smart blinking patterns for Wi-Fi searching, AP mode, active connection, and data RX bursts.
+
+## Hardware Setup
+- **Microcontroller**: ESP8266 (Wemos / Lolin D1 Mini)
+- **Interface**: SoftwareSerial on Pins D7 (RX) and D1 (TX)
+- **Baud Rate**: 2400 baud, 8N1
+- **Voltage Protection**: A resistor voltage divider ($1\text{ k}\Omega / 2\text{ k}\Omega$) must be used on the ESP's RX pin to safe-drop the scale's 5V TX logic down to the ESP-friendly 3.3V. Common GND is required.
+
+## API Endpoint
+### GET `/`
+Returns the current stabilized weight.
+**Response (application/json):**
+```json
+{
+  "weight": 1.140,
+  "raw": "41.1000",
+  "unit": "kg"
+}
 # IoT-gateway
 Разработка аппаратно-программного комплекса на базе микроконтроллера ESP8266 для считывания данных с весового терминала по интерфейсу UART, их парсинга и передачи в мобильное Android-приложение по Wi-Fi (HTTP/JSON).
 
